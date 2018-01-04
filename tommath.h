@@ -15,8 +15,27 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <limits.h>
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1600
+/* supported since Microsoft Visual Studio 2010 */
+#include <stdint.h>
+#else
+typedef signed char            int8_t;
+typedef unsigned char          uint8_t;
+typedef signed short           int16_t;
+typedef unsigned short         uint16_t;
+typedef signed int             int32_t;
+typedef unsigned int           uint32_t;
+#  ifdef _MSC_VER
+   /* long long does not work before MS Visual C++ 7.0 */
+   typedef signed __int64      int64_t;
+   typedef unsigned __int64    uint64_t;
+#  else
+   typedef long long           int64_t;
+   typedef unsigned long long  uint64_t;
+#  endif
+#endif
 
 #include <tommath_class.h>
 
