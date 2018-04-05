@@ -3,8 +3,14 @@
 #Tom St Denis
 
 LTM_CFLAGS  = /Ox /nologo /I. /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE /W3 $(CFLAGS)
+LTM_LDFLAGS = advapi32.lib
+
+#Libraries to be created (this makefile builds only static libraries)
+LIBMAIN_S = tommath.lib
 
 default: library
+
+all: test.exe timing.exe
 
 #START_INS
 OBJECTS=bncore.obj bn_error.obj bn_fast_mp_invmod.obj bn_fast_mp_montgomery_reduce.obj bn_fast_s_mp_mul_digs.obj \
@@ -36,8 +42,16 @@ bn_s_mp_sqr.obj bn_s_mp_sub.obj
 
 HEADERS=tommath.h tommath_class.h tommath_private.h tommath_superclass.h
 
-library: $(OBJECTS)
-	lib /out:tommath.lib $(OBJECTS)
+library: $(LIBMAIN_S)
+
+$(LIBMAIN_S): $(OBJECTS)
+	lib /out:$@ $(OBJECTS)
 
 .c.obj:
 	$(CC) $(LTM_CFLAGS) /c $< /Fo$@
+
+test.exe: demo/demo.c $(LIBMAIN_S)
+	cl $(LTM_CFLAGS) demo/demo.c -DLTM_DEMO_TEST_VS_MTEST=0 $(LIBMAIN_S) $(LTM_LDFLAGS) /Fe$@
+
+timing.exe: demo/timing.c $(LIBMAIN_S)
+	cl $(LTM_CFLAGS) demo/timing.c -DTIMER $(LIBMAIN_S) $(LTM_LDFLAGS) /Fe$@

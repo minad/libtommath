@@ -1,7 +1,13 @@
 #include <tommath.h>
 #include <time.h>
-#include <unistd.h>
 #include <inttypes.h>
+
+#if defined(_WIN32) || defined(_WIN32_WCE)
+#include <windows.h>
+#define sleep(x) Sleep(x)
+#else
+#include <unistd.h>
+#endif
 
 #ifdef IOWNANATHLON
 #include <unistd.h>
