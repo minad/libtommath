@@ -1,35 +1,26 @@
-language: c
+env:
+  global:
+    secure: "A6kZ/KYJXpR1xHuifFSUo8qSpDvXVcBlABQrtd39a09KMaUAWClcp17SM2l3ehMDufWgvkHBBl3MGJaV6dS+H8n2DYOIHjdLYoiFTRccNcQgS7ES/WKNABYLHeqh1jT21E/ttSFUAWIqRbKkzeji45yAiq58YVT/G6+P0cNwiEzkcO1bhCyEMAiU9dCupaQL59wzK+vpmTHnjqSnpdBaxE1f/AFdbNV/bCesQv4xisFUbEVPuYLFZ260Leu5IPJm9mNvB0su1qK2jxxYdMIGakMB9s+amOFOt1Hd3cetrWQi8vQonsOOlMLpJEMkIb+NDJT8K4ot8vBzNrUx/HWKcAHLM29FxcLuBD7WTNGr02SUOtx4oP5wAohMhqRD/v9V4tWwsCVIrOuYYQLxh/FIvrws7c2pB+FwYVvPHtsSSz5/hOD6pec/lW0DZjLqmGo3g76YczxxO9mrzSwgEhRRJPlyVzrEEeBihVrpdZBRe3vxMOLLr/3qrZXFb0G3KTt+IZj6fGssyTVJ+Pi5fJtquumetZfI9lL0OmkHTrxeowAWB7Zvdxnc4czW4nQDDGTOBDO9haInDGFhXtKvSILokUHDVlRDJbbimSQi99yiSSZMdvM5uLSDlCDbx3JXwA4Ha/s2Cgc6V3CfuVM9js94g+2sopyTu7f567KoqjQrLd8="
 
-install:
-    - sudo apt-get update -qq
-    - sudo apt-get install gcc-multilib
+before_install:
+  - eval "${MATRIX_EVAL}"
+
+dist: xenial
+language: c
+script: ./build.sh
 
 matrix:
-  fast_finish: true
-branches:
-  only:
-    - master
-    - develop
-    - /^release\/.*$/
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8"
 
-compiler:
-  - gcc
-  - clang
-script:
-  - ./testme.sh --with-cc=$CC ${BUILDOPTIONS}
-env:
-  - |
-    BUILDOPTIONS="--test-vs-mtest=333333"
-  - |
-    BUILDOPTIONS="--test-vs-mtest=333333 --mtest-real-rand"
-  - |
-    BUILDOPTIONS="--with-low-mp"
-  - |
-    BUILDOPTIONS="--with-m64 --with-m32 --with-mx32"
-
-after_failure:
-  - cat test_*.log
-  - cat gcc_errors_*.log
-
-notifications:
-  irc: "chat.freenode.net#libtom-notifications"
+addons:
+  apt:
+    update: true
