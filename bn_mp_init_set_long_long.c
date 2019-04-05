@@ -1,5 +1,5 @@
 #include "tommath_private.h"
-#ifdef BN_MP_SET_INT_C
+#ifdef BN_MP_INIT_SET_LONG_LONG_C
 /* LibTomMath, multiple-precision integer library -- Tom St Denis
  *
  * LibTomMath is a library that provides multiple-precision
@@ -12,7 +12,15 @@
  * SPDX-License-Identifier: Unlicense
  */
 
-MP_SET_XLONG(mp_set_int, unsigned int)
+/* initialize and set long long value */
+int mp_init_set_long_long(mp_int *a, unsigned long long b)
+{
+   int err;
+   if ((err = mp_init(a)) != MP_OKAY) {
+      return err;
+   }
+   return mp_set_long_long(a, b);
+}
 #endif
 
 /* ref:         $Format:%D$ */
