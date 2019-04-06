@@ -20,7 +20,7 @@ int mp_import(mp_int *rop, size_t count, int order, size_t size,
 {
    int result;
    size_t odd_nails, nail_bytes, i, j;
-   unsigned int odd_nail_mask;
+   unsigned char odd_nail_mask;
 
    mp_zero(rop);
 
@@ -37,7 +37,7 @@ int mp_import(mp_int *rop, size_t count, int order, size_t size,
    odd_nails = (nails % 8u);
    odd_nail_mask = 0xff;
    for (i = 0; i < odd_nails; ++i) {
-      odd_nail_mask ^= (1u << (7u - i));
+      odd_nail_mask ^= (unsigned char)(1u << ((unsigned char)7u - (unsigned char)i));
    }
    nail_bytes = nails / 8u;
 
