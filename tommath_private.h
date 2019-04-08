@@ -127,6 +127,13 @@ extern void *MP_CALLOC(size_t nmemb, size_t size);
 extern void MP_FREE(void *mem, size_t size);
 #endif
 
+/* feature detection macro */
+#define MP_STRINGIZE(x)  MP__STRINGIZE(x)
+#define MP__STRINGIZE(x) #x
+#define MP_HAS(x)        MP_DEFINED(BN_##x##_C)
+#define MP_DEFINED(x)    MP__DEFINED(MP_STRINGIZE(x))
+#define MP__DEFINED(x)   (sizeof(""x"") == 1)
+
 /* TODO: Remove PRIVATE_MP_WARRAY as soon as deprecated MP_WARRAY is removed from tommath.h */
 #undef MP_WARRAY
 #define MP_WARRAY PRIVATE_MP_WARRAY

@@ -26,6 +26,35 @@ static unsigned long ulabs(long x)
    return x > 0 ? (unsigned long)x : -(unsigned long)x;
 }
 
+static int test_defined(void)
+{
+#define DEFINED_TEST1
+   if (!MP_DEFINED(DEFINED_TEST1)) {
+      return EXIT_FAILURE;
+   }
+
+#define DEFINED_TEST2 1
+   if (MP_DEFINED(DEFINED_TEST2)) {
+      return EXIT_FAILURE;
+   }
+
+#define DEFINED_TEST3 0
+   if (MP_DEFINED(DEFINED_TEST3)) {
+      return EXIT_FAILURE;
+   }
+
+#define DEFINED_TEST4 something
+   if (MP_DEFINED(DEFINED_TEST4)) {
+      return EXIT_FAILURE;
+   }
+
+   if (MP_DEFINED(DEFINED_TEST5)) {
+      return EXIT_FAILURE;
+   }
+
+   return EXIT_SUCCESS;
+}
+
 static int test_trivial_stuff(void)
 {
    mp_int a, b, c, d;
@@ -1848,6 +1877,7 @@ int unit_tests(int argc, char **argv)
       int (*fn)(void);
    } test[] = {
 #define T(n) { #n, test_##n }
+      T(defined),
       T(trivial_stuff),
       T(mp_cnt_lsb),
       T(mp_complement),
