@@ -1,36 +1,45 @@
 #include "tommath_private.h"
-#ifdef BN_FAST_S_MP_MUL_HIGH_DIGS_C
+#ifdef BN_S_MP_MUL_DIGS_FAST_C
 /* LibTomMath, multiple-precision integer library -- Tom St Denis */
 /* SPDX-License-Identifier: Unlicense */
 
-/* this is a modified version of fast_s_mul_digs that only produces
- * output digits *above* digs.  See the comments for fast_s_mul_digs
- * to see how it works.
+/* Fast (comba) multiplier
  *
- * This is used in the Barrett reduction since for one of the multiplications
- * only the higher digits were needed.  This essentially halves the work.
+ * This is the fast column-array [comba] multiplier.  It is
+ * designed to compute the columns of the product first
+ * then handle the carries afterwards.  This has the effect
+ * of making the nested loops that compute the columns very
+ * simple and schedulable on super-scalar processors.
+ *
+ * This has been modified to produce a variable number of
+ * digits of output so if say only a half-product is required
+ * you don't have to compute the upper half (a feature
+ * required for fast Barrett reduction).
  *
  * Based on Algorithm 14.12 on pp.595 of HAC.
+ *
  */
-int fast_s_mp_mul_high_digs(const mp_int *a, const mp_int *b, mp_int *c, int digs)
+int s_mp_mul_digs_fast(const mp_int *a, const mp_int *b, mp_int *c, int digs)
 {
    int     olduse, res, pa, ix, iz;
    mp_digit W[MP_WARRAY];
    mp_word  _W;
 
    /* grow the destination as required */
-   pa = a->used + b->used;
-   if (c->alloc < pa) {
-      if ((res = mp_grow(c, pa)) != MP_OKAY) {
+   if (c->alloc < digs) {
+      if ((res = mp_grow(c, digs)) != MP_OKAY) {
          return res;
       }
    }
 
    /* number of output digits to produce */
-   pa = a->used + b->used;
+   pa = MIN(digs, a->used + b->used);
+
+   /* clear the carry */
    _W = 0;
-   for (ix = digs; ix < pa; ix++) {
-      int      tx, ty, iy;
+   for (ix = 0; ix < pa; ix++) {
+      int      tx, ty;
+      int      iy;
       mp_digit *tmpx, *tmpy;
 
       /* get offsets into the two bignums */
@@ -41,14 +50,15 @@ int fast_s_mp_mul_high_digs(const mp_int *a, const mp_int *b, mp_int *c, int dig
       tmpx = a->dp + tx;
       tmpy = b->dp + ty;
 
-      /* this is the number of times the loop will iterrate, essentially its
+      /* this is the number of times the loop will iterrate, essentially
          while (tx++ < a->used && ty-- >= 0) { ... }
        */
       iy = MIN(a->used-tx, ty+1);
 
       /* execute loop */
-      for (iz = 0; iz < iy; iz++) {
+      for (iz = 0; iz < iy; ++iz) {
          _W += (mp_word)*tmpx++ * (mp_word)*tmpy--;
+
       }
 
       /* store term */
@@ -64,9 +74,8 @@ int fast_s_mp_mul_high_digs(const mp_int *a, const mp_int *b, mp_int *c, int dig
 
    {
       mp_digit *tmpc;
-
-      tmpc = c->dp + digs;
-      for (ix = digs; ix < pa; ix++) {
+      tmpc = c->dp;
+      for (ix = 0; ix < pa; ix++) {
          /* now extract the previous digit [below the carry] */
          *tmpc++ = W[ix];
       }

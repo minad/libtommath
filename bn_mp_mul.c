@@ -14,7 +14,7 @@ int mp_mul(const mp_int *a, const mp_int *b, mp_int *c)
    if (0) {
    }
 
-#ifdef BN_MP_BALANCE_MUL_C
+#ifdef BN_S_MP_BALANCE_MUL_C
    else if ((a->used != b->used) &&
 
             /* Check sizes. The smaller one needs to be larger than the Karatsuba cut-off.
@@ -30,23 +30,23 @@ int mp_mul(const mp_int *a, const mp_int *b, mp_int *c)
             /* Not much effect was observed below a ratio of 1:2, but again: YMMV. */
             (MAX(a->used, b->used) >= (2 * min_len))) {
 
-      res = mp_balance_mul(a,b,c);
+      res = s_mp_balance_mul(a,b,c);
    }
 #endif
 
-#ifdef BN_MP_TOOM_MUL_C
+#ifdef BN_S_MP_TOOM_MUL_C
    else if (min_len >= TOOM_MUL_CUTOFF) {
-      res = mp_toom_mul(a, b, c);
+      res = s_mp_toom_mul(a, b, c);
    }
 #endif
 
-#ifdef BN_MP_KARATSUBA_MUL_C
+#ifdef BN_S_MP_KARATSUBA_MUL_C
    else if (min_len >= KARATSUBA_MUL_CUTOFF) {
-      res = mp_karatsuba_mul(a, b, c);
+      res = s_mp_karatsuba_mul(a, b, c);
    }
 #endif
 
-#ifdef BN_FAST_S_MP_MUL_DIGS_C
+#ifdef BN_S_MP_MUL_DIGS_FAST_C
    /* can we use the fast multiplier?
     *
     * The fast multiplier can be used if the output will
@@ -56,7 +56,7 @@ int mp_mul(const mp_int *a, const mp_int *b, mp_int *c)
    else if ((digs < (int)MP_WARRAY) &&
             (min_len <=
              (int)(1u << ((CHAR_BIT * sizeof(mp_word)) - (2u * (size_t)DIGIT_BIT))))) {
-      res = fast_s_mp_mul_digs(a, b, c, digs);
+      res = s_mp_mul_digs_fast(a, b, c, digs);
    }
 #endif
 
