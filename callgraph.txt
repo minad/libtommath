@@ -7378,6 +7378,7 @@ BN_MP_PRIME_IS_PRIME_C
 +--->BN_MP_RAND_C
 |   +--->BN_MP_ZERO_C
 |   +--->BN_MP_GROW_C
+|   +--->BN_MP_CLAMP_C
 +--->BN_MP_DIV_2D_C
 |   +--->BN_MP_COPY_C
 |   |   +--->BN_MP_GROW_C
@@ -9966,6 +9967,7 @@ BN_MP_PRIME_NEXT_PRIME_C
 |   +--->BN_MP_RAND_C
 |   |   +--->BN_MP_ZERO_C
 |   |   +--->BN_MP_GROW_C
+|   |   +--->BN_MP_CLAMP_C
 |   +--->BN_MP_DIV_2D_C
 |   |   +--->BN_MP_COPY_C
 |   |   |   +--->BN_MP_GROW_C
@@ -11762,6 +11764,7 @@ BN_MP_PRIME_RANDOM_EX_C
 |   +--->BN_MP_RAND_C
 |   |   +--->BN_MP_ZERO_C
 |   |   +--->BN_MP_GROW_C
+|   |   +--->BN_MP_CLAMP_C
 |   +--->BN_MP_DIV_2D_C
 |   |   +--->BN_MP_COPY_C
 |   |   |   +--->BN_MP_GROW_C
@@ -12157,6 +12160,7 @@ BN_MP_RADIX_SMAP_C
 BN_MP_RAND_C
 +--->BN_MP_ZERO_C
 +--->BN_MP_GROW_C
++--->BN_MP_CLAMP_C
 
 
 BN_MP_READ_RADIX_C
