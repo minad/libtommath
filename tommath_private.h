@@ -31,7 +31,7 @@ extern "C" {
  */
 #ifdef MP_NO_ZERO_ON_FREE
 #  define MP_FREE_BUFFER(mem, size)   MP_FREE((mem), (size))
-#  define MP_FREE_DIGITS(mem, digits) MP_FREE((mem), sizeof (mp_digit) * (digits))
+#  define MP_FREE_DIGITS(mem, digits) MP_FREE((mem), sizeof (mp_digit) * (size_t)(digits))
 #else
 #  define MP_FREE_BUFFER(mem, size)   do { size_t fs_ = (size); void* fm_ = (mem); if (fm_) { MP_ZERO_BUFFER(fm_, fs_); MP_FREE(fm_, fs_); } } while (0)
 #  define MP_FREE_DIGITS(mem, digits) do { int fd_ = (digits); void* fm_ = (mem); if (fm_) { MP_ZERO_BUFFER(fm_, sizeof (mp_digit) * (size_t)fd_); MP_FREE(fm_, sizeof (mp_digit) * (size_t)fd_); } } while (0)
