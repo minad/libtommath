@@ -148,7 +148,7 @@ extern const size_t mp_s_rmap_reverse_sz;
  *  b is the original value that should be set in the MPI.
  */
 #define MP_SET_XLONG(func_name, type)                    \
-int func_name (mp_int * a, type b)                       \
+mp_err func_name (mp_int * a, type b)                    \
 {                                                        \
    int x = 0;                                            \
    mp_zero(a);                                           \
