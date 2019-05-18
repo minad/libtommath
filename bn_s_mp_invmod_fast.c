@@ -137,7 +137,7 @@ top:
       }
    }
 
-   mp_exch(&D, c);
+   MP_SWAP(D, *c);
    c->sign = neg;
    res = MP_OKAY;
 

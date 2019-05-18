@@ -63,7 +63,7 @@ mp_err mp_gcd(const mp_int *a, const mp_int *b, mp_int *c)
       /* make sure v is the largest */
       if (mp_cmp_mag(&u, &v) == MP_GT) {
          /* swap u and v to make sure v is >= u */
-         mp_exch(&u, &v);
+         MP_SWAP(u, v);
       }
 
       /* subtract smallest from largest */

@@ -134,6 +134,9 @@ extern void MP_FREE(void *mem, size_t size);
 #define MP_MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define MP_MAX(x, y) (((x) > (y)) ? (x) : (y))
 
+/* swap the elements of two integers, for cases where you can't simply swap the mp_int pointers around */
+#define MP_SWAP(a, b) do { mp_int swap_tmp_ = a; swap_tmp_ = a; a = b; b = swap_tmp_; } while (0)
+
 /* ---> Basic Manipulations <--- */
 #define MP_IS_ZERO(a) ((a)->used == 0)
 #define MP_IS_EVEN(a) (((a)->used == 0) || (((a)->dp[0] & 1u) == 0u))

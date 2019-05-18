@@ -30,9 +30,9 @@ OBJECTS=bn_cutoffs.o bn_deprecated.o bn_mp_2expt.o bn_mp_abs.o bn_mp_add.o bn_mp
 bn_mp_and.o bn_mp_clamp.o bn_mp_clear.o bn_mp_clear_multi.o bn_mp_cmp.o bn_mp_cmp_d.o bn_mp_cmp_mag.o \
 bn_mp_cnt_lsb.o bn_mp_complement.o bn_mp_copy.o bn_mp_count_bits.o bn_mp_decr.o bn_mp_div.o bn_mp_div_2.o \
 bn_mp_div_2d.o bn_mp_div_3.o bn_mp_div_d.o bn_mp_dr_is_modulus.o bn_mp_dr_reduce.o bn_mp_dr_setup.o \
-bn_mp_error_to_string.o bn_mp_exch.o bn_mp_export.o bn_mp_expt_d.o bn_mp_expt_d_ex.o bn_mp_exptmod.o \
-bn_mp_exteuclid.o bn_mp_fread.o bn_mp_fwrite.o bn_mp_gcd.o bn_mp_get_double.o bn_mp_get_int.o \
-bn_mp_get_long.o bn_mp_get_long_long.o bn_mp_grow.o bn_mp_ilogb.o bn_mp_import.o bn_mp_incr.o bn_mp_init.o \
+bn_mp_error_to_string.o bn_mp_export.o bn_mp_expt_d.o bn_mp_expt_d_ex.o bn_mp_exptmod.o bn_mp_exteuclid.o \
+bn_mp_fread.o bn_mp_fwrite.o bn_mp_gcd.o bn_mp_get_double.o bn_mp_get_int.o bn_mp_get_long.o \
+bn_mp_get_long_long.o bn_mp_grow.o bn_mp_ilogb.o bn_mp_import.o bn_mp_incr.o bn_mp_init.o \
 bn_mp_init_copy.o bn_mp_init_multi.o bn_mp_init_set.o bn_mp_init_set_int.o bn_mp_init_size.o \
 bn_mp_invmod.o bn_mp_is_square.o bn_mp_iseven.o bn_mp_isodd.o bn_mp_kronecker.o bn_mp_lcm.o bn_mp_lshd.o \
 bn_mp_mod.o bn_mp_mod_2d.o bn_mp_mod_d.o bn_mp_montgomery_calc_normalization.o bn_mp_montgomery_reduce.o \

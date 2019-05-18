@@ -29,7 +29,7 @@ mp_err mp_or(const mp_int *a, const mp_int *b, mp_int *c)
       t.dp[ix] |= x->dp[ix];
    }
    mp_clamp(&t);
-   mp_exch(c, &t);
+   MP_SWAP(*c, t);
    mp_clear(&t);
    return MP_OKAY;
 }

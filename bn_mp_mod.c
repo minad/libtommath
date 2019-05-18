@@ -20,7 +20,7 @@ mp_err mp_mod(const mp_int *a, const mp_int *b, mp_int *c)
 
    if (MP_IS_ZERO(&t) || (t.sign == b->sign)) {
       res = MP_OKAY;
-      mp_exch(&t, c);
+      MP_SWAP(t, *c);
    } else {
       res = mp_add(b, &t, c);
    }

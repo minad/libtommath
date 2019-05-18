@@ -249,7 +249,7 @@ mp_err mp_init_multi(mp_int *mp, ...) MP_NULL_TERMINATED MP_WUR;
 void mp_clear_multi(mp_int *mp, ...) MP_NULL_TERMINATED;
 
 /* exchange two ints */
-void mp_exch(mp_int *a, mp_int *b);
+MP_DEPRECATED(private) void mp_exch(mp_int *a, mp_int *b);
 
 /* shrink ram required for a bignum */
 mp_err mp_shrink(mp_int *a) MP_WUR;

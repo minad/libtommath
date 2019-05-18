@@ -55,7 +55,7 @@ mp_err mp_sqrt(const mp_int *arg, mp_int *ret)
       /* t1 >= sqrt(arg) >= t2 at this point */
    } while (mp_cmp_mag(&t1, &t2) == MP_GT);
 
-   mp_exch(&t1, ret);
+   MP_SWAP(t1, *ret);
 
 E1:
    mp_clear(&t2);

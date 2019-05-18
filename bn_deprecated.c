@@ -6,6 +6,12 @@
 
 /* SPDX-License-Identifier: Unlicense */
 #include <tommath_private.h>
+#ifdef BN_MP_EXCH_C
+void mp_exch(mp_int *a, mp_int *b)
+{
+   MP_SWAP(*a, *b);
+}
+#endif
 #ifdef BN_MP_GET_BIT_C
 /* Checks the bit at position b and returns MP_YES
    if the bit is 1, MP_NO if it is 0 and MP_VAL

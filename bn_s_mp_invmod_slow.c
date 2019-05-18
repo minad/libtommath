@@ -151,7 +151,7 @@ top:
    }
 
    /* C is now the inverse */
-   mp_exch(&C, c);
+   MP_SWAP(C, *c);
    res = MP_OKAY;
 LBL_ERR:
    mp_clear_multi(&x, &y, &u, &v, &A, &B, &C, &D, NULL);

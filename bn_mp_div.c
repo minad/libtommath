@@ -62,11 +62,11 @@ mp_err mp_div(const mp_int *a, const mp_int *b, mp_int *c, mp_int *d)
    n  = a->sign;
    n2 = (a->sign == b->sign) ? MP_ZPOS : MP_NEG;
    if (c != NULL) {
-      mp_exch(c, &q);
+      MP_SWAP(*c, q);
       c->sign  = MP_IS_ZERO(c) ? MP_ZPOS : n2;
    }
    if (d != NULL) {
-      mp_exch(d, &ta);
+      MP_SWAP(*d, ta);
       d->sign = MP_IS_ZERO(d) ? MP_ZPOS : n;
    }
 LBL_ERR:
@@ -256,7 +256,7 @@ mp_err mp_div(const mp_int *a, const mp_int *b, mp_int *c, mp_int *d)
 
    if (c != NULL) {
       mp_clamp(&q);
-      mp_exch(&q, c);
+      MP_SWAP(q, *c);
       c->sign = neg;
    }
 
@@ -264,7 +264,7 @@ mp_err mp_div(const mp_int *a, const mp_int *b, mp_int *c, mp_int *d)
       if ((res = mp_div_2d(&x, norm, &x, NULL)) != MP_OKAY) {
          goto LBL_Y;
       }
-      mp_exch(&x, d);
+      MP_SWAP(x, *d);
    }
 
    res = MP_OKAY;

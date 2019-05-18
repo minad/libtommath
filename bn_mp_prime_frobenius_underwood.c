@@ -153,7 +153,7 @@ mp_err mp_prime_frobenius_underwood(const mp_int *N, mp_bool *result)
          if ((e = mp_sub(&T2z, &sz, &tz)) != MP_OKAY) {
             goto LBL_FU_ERR;
          }
-         mp_exch(&sz, &T1z);
+         MP_SWAP(sz, T1z);
       }
    }
 

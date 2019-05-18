@@ -66,7 +66,7 @@ mp_err s_mp_mul_digs(const mp_int *a, const mp_int *b, mp_int *c, int digs)
    }
 
    mp_clamp(&t);
-   mp_exch(&t, c);
+   MP_SWAP(t, *c);
 
    mp_clear(&t);
    return MP_OKAY;

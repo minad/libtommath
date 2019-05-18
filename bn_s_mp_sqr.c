@@ -62,7 +62,7 @@ mp_err s_mp_sqr(const mp_int *a, mp_int *b)
    }
 
    mp_clamp(&t);
-   mp_exch(&t, b);
+   MP_SWAP(t, *b);
    mp_clear(&t);
    return MP_OKAY;
 }

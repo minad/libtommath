@@ -163,7 +163,7 @@ mp_err mp_n_root_ex(const mp_int *a, mp_digit b, mp_int *c, int fast)
    }
 
    /* set the result */
-   mp_exch(&t1, c);
+   MP_SWAP(t1, *c);
 
    /* set the sign of the result */
    c->sign = a->sign;

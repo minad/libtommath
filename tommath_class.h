@@ -38,7 +38,6 @@
 #   define BN_MP_DR_REDUCE_C
 #   define BN_MP_DR_SETUP_C
 #   define BN_MP_ERROR_TO_STRING_C
-#   define BN_MP_EXCH_C
 #   define BN_MP_EXPORT_C
 #   define BN_MP_EXPT_D_C
 #   define BN_MP_EXPT_D_EX_C
@@ -162,6 +161,7 @@
 #endif
 
 #if defined(BN_DEPRECATED_C)
+#   define BN_MP_EXCH_C
 #   define BN_MP_GET_BIT_C
 #   define BN_S_MP_GET_BIT_C
 #   define BN_S_MP_JACOBI_C
@@ -345,9 +345,6 @@
 #endif
 
 #if defined(BN_MP_ERROR_TO_STRING_C)
-#endif
-
-#if defined(BN_MP_EXCH_C)
 #endif
 
 #if defined(BN_MP_EXPORT_C)

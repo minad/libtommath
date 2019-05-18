@@ -71,7 +71,7 @@ mp_err s_mp_balance_mul(const mp_int *a, const mp_int *b, mp_int *c)
       }
    }
 
-   mp_exch(&r,c);
+   MP_SWAP(r, *c);
 LBL_ERR:
    mp_clear_multi(&a0, &tmp, &r,NULL);
    return e;

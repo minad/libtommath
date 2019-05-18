@@ -53,7 +53,7 @@ mp_err mp_div_3(const mp_int *a, mp_int *c, mp_digit *d)
    /* [optional] store the quotient */
    if (c != NULL) {
       mp_clamp(&q);
-      mp_exch(&q, c);
+      MP_SWAP(q, *c);
    }
    mp_clear(&q);
 

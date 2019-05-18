@@ -156,11 +156,11 @@ mp_err mp_ilogb(const mp_int *a, mp_digit base, mp_int *c)
       cmp = mp_cmp(a, &bracket_mid);
       if (cmp == MP_LT) {
          high = mid;
-         mp_exch(&bracket_mid, &bracket_high);
+         MP_SWAP(bracket_mid, bracket_high);
       }
       if (cmp == MP_GT) {
          low = mid;
-         mp_exch(&bracket_mid, &bracket_low);
+         MP_SWAP(bracket_mid, bracket_low);
       }
       if (cmp == MP_EQ) {
          mp_set_int(c, (unsigned long)mid);

@@ -224,7 +224,7 @@ mp_err s_mp_exptmod(const mp_int *G, const mp_int *X, const mp_int *P, mp_int *Y
       }
    }
 
-   mp_exch(&res, Y);
+   MP_SWAP(res, *Y);
    err = MP_OKAY;
 LBL_RES:
    mp_clear(&res);

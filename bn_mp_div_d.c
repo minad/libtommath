@@ -90,7 +90,7 @@ mp_err mp_div_d(const mp_int *a, mp_digit b, mp_int *c, mp_digit *d)
 
    if (c != NULL) {
       mp_clamp(&q);
-      mp_exch(&q, c);
+      MP_SWAP(q, *c);
    }
    mp_clear(&q);
 

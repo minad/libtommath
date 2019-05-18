@@ -425,10 +425,6 @@
 			>
 		</File>
 		<File
-			RelativePath="bn_mp_exch.c"
-			>
-		</File>
-		<File
 			RelativePath="bn_mp_export.c"
 			>
 		</File>

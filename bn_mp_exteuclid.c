@@ -92,13 +92,13 @@ mp_err mp_exteuclid(const mp_int *a, const mp_int *b, mp_int *U1, mp_int *U2, mp
 
    /* copy result out */
    if (U1 != NULL) {
-      mp_exch(U1, &u1);
+      MP_SWAP(*U1, u1);
    }
    if (U2 != NULL) {
-      mp_exch(U2, &u2);
+      MP_SWAP(*U2, u2);
    }
    if (U3 != NULL) {
-      mp_exch(U3, &u3);
+      MP_SWAP(*U3, u3);
    }
 
    err = MP_OKAY;
