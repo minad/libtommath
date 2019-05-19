@@ -1373,43 +1373,6 @@ this function should take that into account.  Only trivially small constants can
 To overcome the limitations of the mp\_set algorithm the mp\_set\_int algorithm is ideal.  It accepts a ``long''
 data type as input and will always treat it as a 32-bit integer.
 
-\begin{figure}[h]
-\begin{center}
-\begin{tabular}{l}
-\hline Algorithm \textbf{mp\_set\_int}. \\
-\textbf{Input}.   An mp\_int $a$ and a ``long'' integer $b$ \\
-\textbf{Output}.  Make $a$ equivalent to $b$ \\
-\hline \\
-1.  Zero $a$ (\textit{mp\_zero}) \\
-2.  for $n$ from 0 to 7 do \\
-\hspace{3mm}2.1  $a \leftarrow a \cdot 16$ (\textit{mp\_mul2d}) \\
-\hspace{3mm}2.2  $u \leftarrow \lfloor b / 2^{4(7 - n)} \rfloor \mbox{ (mod }16\mbox{)}$\\
-\hspace{3mm}2.3  $a_0 \leftarrow a_0 + u$ \\
-\hspace{3mm}2.4  $a.used \leftarrow a.used + 1$ \\
-3.  Clamp excess used digits (\textit{mp\_clamp}) \\
-\hline
-\end{tabular}
-\end{center}
-\caption{Algorithm mp\_set\_int}
-\end{figure}
-
-\textbf{Algorithm mp\_set\_int.}
-The algorithm performs eight iterations of a simple loop where in each iteration four bits from the source are added to the
-mp\_int.  Step 2.1 will multiply the current result by sixteen making room for four more bits in the less significant positions.  In step 2.2 the
-next four bits from the source are extracted and are added to the mp\_int. The \textbf{used} digit count is
-incremented to reflect the addition.  The \textbf{used} digit counter is incremented since if any of the leading digits were zero the mp\_int would have
-zero digits used and the newly added four bits would be ignored.
-
-Excess zero digits are trimmed in steps 2.1 and 3 by using higher level algorithms mp\_mul2d and mp\_clamp.
-
-EXAM,bn_mp_set_int.c
-
-This function sets four bits of the number at a time to handle all practical \textbf{DIGIT\_BIT} sizes.  The weird
-addition on line @38,a->used@ ensures that the newly added in bits are added to the number of digits.  While it may not
-seem obvious as to why the digit counter does not grow exceedingly large it is because of the shift on line @27,mp_mul_2d@
-as well as the  call to mp\_clamp() on line @40,mp_clamp@.  Both functions will clamp excess leading digits which keeps
-the number of used digits low.
-
 \section{Comparisons}
 \subsection{Unsigned Comparisions}
 Comparing a multiple precision integer is performed with the exact same algorithm used to compare two decimal numbers.  For example,
@@ -5985,8 +5948,6 @@ are congruent to one modulo four, otherwise it evaluates to negative one.
 
 By step nine if $a'$ does not equal one a recursion is required.  Step 9.1 computes $p' \equiv p \mbox{ (mod }a'\mbox{)}$ and will recurse to compute
 $\left ( {p' \over a'} \right )$ which is multiplied against the current Jacobi product.
-
-EXAM,bn_mp_jacobi.c
 
 As a matter of practicality the variable $a'$ as per the pseudo-code is reprensented by the variable $a1$ since the $'$ symbol is not valid for a C
 variable name character.
