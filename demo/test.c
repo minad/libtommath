@@ -1435,61 +1435,61 @@ static int test_mp_incr(void)
    mp_err e = MP_OKAY;
 
    if ((e = mp_init_multi(&a, &b, NULL)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it increment inside the limits of a MP_xBIT limb? */
    mp_set(&a, MP_MASK/2);
    if ((e = mp_incr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp_d(&a, (MP_MASK/2uL) + 1uL) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it increment outside of the limits of a MP_xBIT limb? */
    mp_set(&a, MP_MASK);
    mp_set(&b, MP_MASK);
    if ((e = mp_incr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if ((e = mp_add_d(&b, 1uL, &b)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp(&a, &b) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it increment from -1 to 0? */
    mp_set(&a, 1uL);
    a.sign = MP_NEG;
    if ((e = mp_incr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp_d(&a, 0uL) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it increment from -(MP_MASK + 1) to -MP_MASK? */
    mp_set(&a, MP_MASK);
    if ((e = mp_add_d(&a, 1uL, &a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    a.sign = MP_NEG;
    if ((e = mp_incr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (a.sign != MP_NEG) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    a.sign = MP_ZPOS;
    if (mp_cmp_d(&a, MP_MASK) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    mp_clear_multi(&a, &b, NULL);
    return EXIT_SUCCESS;
-LTM_ERR:
+LBL_ERR:
    mp_clear_multi(&a, &b, NULL);
    return EXIT_FAILURE;
 }
@@ -1500,42 +1500,42 @@ static int test_mp_decr(void)
    mp_err e = MP_OKAY;
 
    if ((e = mp_init_multi(&a, &b, NULL)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it decrement inside the limits of a MP_xBIT limb? */
    mp_set(&a, MP_MASK/2);
    if ((e = mp_decr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp_d(&a, (MP_MASK/2uL) - 1uL) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it decrement outside of the limits of a MP_xBIT limb? */
    mp_set(&a, MP_MASK);
    if ((e = mp_add_d(&a, 1uL, &a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if ((e = mp_decr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp_d(&a, MP_MASK) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    /* Does it decrement from 0 to -1? */
    mp_zero(&a);
    if ((e = mp_decr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (a.sign == MP_NEG) {
       a.sign = MP_ZPOS;
       if (mp_cmp_d(&a, 1uL) != MP_EQ) {
-         goto LTM_ERR;
+         goto LBL_ERR;
       }
    } else {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
 
@@ -1545,18 +1545,18 @@ static int test_mp_decr(void)
    mp_set(&b, MP_MASK);
    b.sign = MP_NEG;
    if ((e = mp_sub_d(&b, 1uL, &b)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if ((e = mp_decr(&a)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if (mp_cmp(&a, &b) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    mp_clear_multi(&a, &b, NULL);
    return EXIT_SUCCESS;
-LTM_ERR:
+LBL_ERR:
    mp_clear_multi(&a, &b, NULL);
    return EXIT_FAILURE;
 }
@@ -1790,13 +1790,13 @@ static int test_mp_n_root(void)
          mp_read_radix(&r, root[i][j-3], 10);
          if (mp_cmp(&r, &c) != MP_EQ) {
             fprintf(stderr, "mp_n_root failed at input #%d, root #%d\n", i, j);
-            goto LTM_ERR;
+            goto LBL_ERR;
          }
       }
    }
    mp_clear_multi(&a, &c, &r, NULL);
    return EXIT_SUCCESS;
-LTM_ERR:
+LBL_ERR:
    mp_clear_multi(&a, &c, &r, NULL);
    return EXIT_FAILURE;
 }
@@ -1813,31 +1813,31 @@ static int test_s_mp_balance_mul(void)
       "HzrSq9WVt1jDTVlwUxSKqxctu2GVD+N8+SVGaPFRqdxyld6IxDBbj27BPJzYUdR96k3sWpkO8XnDBvupGPnehpQe4KlO/KmN1PjFov/UTZYM+LYzkFcBPyV6hkkL8ePC1rlFLAHzgJMBCXVp4mRqtkQrDsZXXlcqlbTFu69wF6zDEysiX2cAtn/kP9ldblJiwYPCD8hG";
 
    if ((e = mp_init_multi(&a, &b, &c, NULL)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    if ((e = mp_read_radix(&a, na, 64)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
    if ((e = mp_read_radix(&b, nb, 64)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    if ((e = mp_mul(&a, &b, &c)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    if ((e = mp_read_radix(&b, nc, 64)) != MP_OKAY) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    if (mp_cmp(&b, &c) != MP_EQ) {
-      goto LTM_ERR;
+      goto LBL_ERR;
    }
 
    mp_clear_multi(&a, &b, &c, NULL);
    return EXIT_SUCCESS;
-LTM_ERR:
+LBL_ERR:
    mp_clear_multi(&a, &b, &c, NULL);
    return EXIT_FAILURE;
 }

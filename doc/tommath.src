@@ -767,7 +767,7 @@ iteration the variable $a$ is substituted for a new integer that lies inclusivel
 the loop would not iterate.  By contrast if the ``downto'' keyword were used in place of ``to'' the loop would iterate
 decrementally.
 
-EXAM,bn_mp_init.c
+EXAM,mp_init.c
 
 One immediate observation of this initializtion function is that it does not return a pointer to a mp\_int structure.  It
 is assumed that the caller has already allocated memory for the mp\_int structure, typically on the application stack.  The
@@ -826,7 +826,7 @@ digit pointer \textbf{dp} setting.
 Once an mp\_int has been cleared the mp\_int structure is no longer in a valid state for any other algorithm
 with the exception of algorithms mp\_init, mp\_init\_copy, mp\_init\_size and mp\_clear.
 
-EXAM,bn_mp_clear.c
+EXAM,mp_clear.c
 
 The algorithm only operates on the mp\_int if it hasn't been previously cleared.  The if statement (line @23,a->dp != NULL@)
 checks to see if the \textbf{dp} member is not \textbf{NULL}.  If the mp\_int is a valid mp\_int then \textbf{dp} cannot be
@@ -890,7 +890,7 @@ It is assumed that the reallocation (step four) leaves the lower $a.alloc$ digit
 akin to how the \textit{realloc} function from the standard C library works.  Since the newly allocated digits are
 assumed to contain undefined values they are initially set to zero.
 
-EXAM,bn_mp_grow.c
+EXAM,mp_grow.c
 
 A quick optimization is to first determine if a memory re-allocation is required at all.  The if statement (line @24,alloc@) checks
 if the \textbf{alloc} member of the mp\_int is smaller than the requested digit count.  If the count is not larger than \textbf{alloc}
@@ -945,7 +945,7 @@ Like algorithm mp\_init, the mp\_int structure is initialized to a default state
 particular algorithm is useful if it is known ahead of time the approximate size of the input.  If the approximation is
 correct no further memory re-allocations are required to work with the mp\_int.
 
-EXAM,bn_mp_init_size.c
+EXAM,mp_init_size.c
 
 If the memory can be successfully allocated the mp\_int is placed in a default state representing the integer zero.  Otherwise, the error code \textbf{MP\_MEM} will be
 returned (line @27,return@).
@@ -986,7 +986,7 @@ The algorithm will initialize the array of mp\_int variables one at a time.  If 
 (\textit{step 1.2}) all of the previously initialized variables are cleared.  The goal is an ``all or nothing''
 initialization which allows for quick recovery from runtime errors.
 
-EXAM,bn_mp_init_multi.c
+EXAM,mp_init_multi.c
 
 This function intializes a variable length list of mp\_int structure pointers.  However, instead of having the mp\_int
 structures in an actual C array they are simply passed as arguments to the function.  This function makes use of the
@@ -1042,7 +1042,7 @@ As can be expected this algorithm is very simple.  The loop on step one is expec
 the most.  For example, this will happen in cases where there is not a carry to fill the last position.  Step two fixes the sign for
 when all of the digits are zero to ensure that the mp\_int is valid at all times.
 
-EXAM,bn_mp_clamp.c
+EXAM,mp_clamp.c
 
 Note on line @27,while@ how to test for the \textbf{used} count is made on the left of the \&\& operator.  In the C programming
 language the terms to \&\& are evaluated left to right with a boolean short-circuit if any condition fails.  This is
@@ -1126,7 +1126,7 @@ limited so it is assumed that if a algorithm fails it will clear all temporarily
 the error code itself.  However, the C code presented will demonstrate all of the error handling logic required to
 implement the pseudo-code.
 
-EXAM,bn_mp_copy.c
+EXAM,mp_copy.c
 
 Occasionally a dependent algorithm may copy an mp\_int effectively into itself such as when the input and output
 mp\_int structures passed to a function are one and the same.  For this case it is optimal to return immediately without
@@ -1223,7 +1223,7 @@ mp\_init\_copy algorithm has been designed to help perform this task.
 This algorithm will initialize an mp\_int variable and copy another previously initialized mp\_int variable into it.  As
 such this algorithm will perform two operations in one step.
 
-EXAM,bn_mp_init_copy.c
+EXAM,mp_init_copy.c
 
 This will initialize \textbf{a} and make it a verbatim copy of the contents of \textbf{b}.  Note that
 \textbf{a} will have its own memory allocated which means that \textbf{b} may be cleared after the call
@@ -1253,7 +1253,7 @@ perform this task.
 \textbf{Algorithm mp\_zero.}
 This algorithm simply resets a mp\_int to the default state.
 
-EXAM,bn_mp_zero.c
+EXAM,mp_zero.c
 
 After the function is completed, all of the digits are zeroed, the \textbf{used} count is zeroed and the
 \textbf{sign} variable is set to \textbf{MP\_ZPOS}.
@@ -1286,7 +1286,7 @@ algorithm where the check in mp\_copy that determines if the source and destinat
 for instance, the developer to pass the same mp\_int as the source and destination to this function without addition
 logic to handle it.
 
-EXAM,bn_mp_abs.c
+EXAM,mp_abs.c
 
 This fairly trivial algorithm first eliminates non--required duplications (line @27,a != b@) and then sets the
 \textbf{sign} flag to \textbf{MP\_ZPOS}.
@@ -1322,7 +1322,7 @@ the algorithm returns immediately.  Otherwise it flips the sign flag and stores 
 $a$ had no digits then it must be positive by definition.  Had step three been omitted then the algorithm would return
 zero as negative.
 
-EXAM,bn_mp_neg.c
+EXAM,mp_neg.c
 
 Like mp\_abs() this function avoids non--required duplications (line @21,a != b@) and then sets the sign.  We
 have to make sure that only non--zero values get a \textbf{sign} of \textbf{MP\_NEG}.  If the mp\_int is zero
@@ -1355,7 +1355,7 @@ Often a mp\_int must be set to a relatively small value such as $1$ or $2$.  For
 This algorithm sets a mp\_int to a small single digit value.  Step number 1 ensures that the integer is reset to the default state.  The
 single digit is set (\textit{modulo $\beta$}) and the \textbf{used} count is adjusted accordingly.
 
-EXAM,bn_mp_set.c
+EXAM,mp_set.c
 
 First we zero (line @21,mp_zero@) the mp\_int to make sure that the other members are initialized for a
 small positive constant.  mp\_zero() ensures that the \textbf{sign} is positive and the \textbf{used} count
@@ -1427,7 +1427,7 @@ If both have the same number of digits than the actual digits themselves must be
 By step three both inputs must have the same number of digits so its safe to start from either $a.used - 1$ or $b.used - 1$ and count down to
 the zero'th digit.  If after all of the digits have been compared, no difference is found, the algorithm returns \textbf{MP\_EQ}.
 
-EXAM,bn_mp_cmp_mag.c
+EXAM,mp_cmp_mag.c
 
 The two if statements (lines @24,if@ and @28,if@) compare the number of digits in the two inputs.  These two are
 performed before all of the digits are compared since it is a very cheap test to perform and can potentially save
@@ -1465,7 +1465,7 @@ comparison code.  When the signs are equal the digits of the inputs must be comp
 three the unsigned comparision flips the order of the arguments since they are both negative.  For instance, if $-a > -b$ then
 $\vert a \vert < \vert b \vert$.  Step number four will compare the two when they are both positive.
 
-EXAM,bn_mp_cmp.c
+EXAM,mp_cmp.c
 
 The two if statements (lines @22,if@ and @26,if@) perform the initial sign comparison.  If the signs are not the equal then which ever
 has the positive sign is larger.   The inputs are compared (line @30,if@) based on magnitudes.  If the signs were both
@@ -1590,7 +1590,7 @@ and the carry to the destination.
 The final carry is stored in $c_{max}$ and digits above $max$ upto $oldused$ are zeroed which completes the addition.
 
 
-EXAM,bn_s_mp_add.c
+EXAM,s_mp_add.c
 
 We first sort (lines @27,if@ to @35,}@) the inputs based on magnitude and determine the $min$ and $max$ variables.
 Note that $x$ is a pointer to an mp\_int assigned to the largest input, in effect it is a local alias.  Next we
@@ -1687,7 +1687,7 @@ carry.  This method of carry extraction may seem awkward but the reason for it b
 If $b$ has a smaller magnitude than $a$ then step 9 will force the carry and copy operation to propagate through the larger input $a$ into $c$.  Step
 10 will ensure that any leading digits of $c$ above the $max$'th position are zeroed.
 
-EXAM,bn_s_mp_sub.c
+EXAM,s_mp_sub.c
 
 Like low level addition we ``sort'' the inputs.  Except in this case the sorting is hardcoded
 (lines @24,min@ and @25,max@).  In reality the $min$ and $max$ variables are only aliases and are only
@@ -1784,7 +1784,7 @@ For example, consider performing $-a + a$ with algorithm mp\_add.  By the descri
 produce a result of $-0$.  However, since the sign is set first then the unsigned addition is performed the subsequent usage of algorithm mp\_clamp
 within algorithm s\_mp\_add will force $-0$ to become $0$.
 
-EXAM,bn_mp_add.c
+EXAM,mp_add.c
 
 The source code follows the algorithm fairly closely.  The most notable new source code addition is the usage of the $res$ integer variable which
 is used to pass result of the unsigned operations forward.  Unlike in the algorithm, the variable $res$ is merely returned as is without
@@ -1852,7 +1852,7 @@ the operations required.
 Similar to the case of algorithm mp\_add the \textbf{sign} is set first before the unsigned addition or subtraction.  That is to prevent the
 algorithm from producing $-a - -a = -0$ as a result.
 
-EXAM,bn_mp_sub.c
+EXAM,mp_sub.c
 
 Much like the implementation of algorithm mp\_add the variable $res$ is used to catch the return code of the unsigned addition or subtraction operations
 and forward it to the end of the function.  On line @38, != MP_LT@ the ``not equal to'' \textbf{MP\_LT} expression is used to emulate a
@@ -1920,7 +1920,7 @@ forwarding the carry to the next iteration.
 Step 7 takes care of any final carry by setting the $a.used$'th digit of the result to the carry and augmenting the \textbf{used} count of $b$.
 Step 8 clears any leading digits of $b$ in case it originally had a larger magnitude than $a$.
 
-EXAM,bn_mp_mul_2.c
+EXAM,mp_mul_2.c
 
 This implementation is essentially an optimized implementation of s\_mp\_add for the case of doubling an input.  The only noteworthy difference
 is the use of the logical shift operator on line @52,<<@ to perform a single precision doubling.
@@ -1967,7 +1967,7 @@ reading past the end of the array of digits.
 Essentially the loop at step 6 is similar to that of mp\_mul\_2 except the logical shifts go in the opposite direction and the carry is at the
 least significant bit not the most significant bit.
 
-EXAM,bn_mp_div_2.c
+EXAM,mp_div_2.c
 
 \section{Polynomial Basis Operations}
 Recall from ~POLY~ that any integer can be represented as a polynomial in $x$ as $y = f(\beta)$.  Such a representation is also known as
@@ -2029,7 +2029,7 @@ step 8 sets the lower $b$ digits to zero.
 \newpage
 FIGU,sliding_window,Sliding Window Movement
 
-EXAM,bn_mp_lshd.c
+EXAM,mp_lshd.c
 
 The if statement (line @24,if@) ensures that the $b$ variable is greater than zero since we do not interpret negative
 shift counts properly.  The \textbf{used} count is incremented by $b$ before the copy loop begins.  This elminates
@@ -2083,7 +2083,7 @@ Also the digits are copied from the leading to the trailing edge.
 
 Once the window copy is complete the upper digits must be zeroed and the \textbf{used} count decremented.
 
-EXAM,bn_mp_rshd.c
+EXAM,mp_rshd.c
 
 The only noteworthy element of this routine is the lack of a return type since it cannot fail.  Like mp\_lshd() we
 form a sliding window except we copy in the other direction.  After the window (line @59,for (;@) we then zero
@@ -2146,7 +2146,7 @@ variable is used to extract the upper $d$ bits to form the carry for the next it
 This algorithm is loosely measured as a $O(2n)$ algorithm which means that if the input is $n$-digits that it takes $2n$ ``time'' to
 complete.  It is possible to optimize this algorithm down to a $O(n)$ algorithm at a cost of making the algorithm slightly harder to follow.
 
-EXAM,bn_mp_mul_2d.c
+EXAM,mp_mul_2d.c
 
 The shifting is performed in--place which means the first step (line @24,a != c@) is to copy the input to the
 destination.  We avoid calling mp\_copy() by making sure the mp\_ints are different.  The destination then
@@ -2198,7 +2198,7 @@ This algorithm will divide an input $a$ by $2^b$ and produce the quotient and re
 mp\_mul\_2d by first using whole digit shifts then single precision shifts.  This algorithm will also produce the remainder of the division
 by using algorithm mp\_mod\_2d.
 
-EXAM,bn_mp_div_2d.c
+EXAM,mp_div_2d.c
 
 The implementation of algorithm mp\_div\_2d is slightly different than the algorithm specifies.  The remainder $d$ may be optionally
 ignored by passing \textbf{NULL} as the pointer to the mp\_int variable.    The temporary mp\_int variable $t$ is used to hold the
@@ -2247,7 +2247,7 @@ This algorithm will quickly calculate the value of $a \mbox{ (mod }2^b\mbox{)}$.
 result is set to zero.  If $b$ is greater than the number of bits in $a$ then it simply copies $a$ to $c$ and returns.  Otherwise, $a$
 is copied to $b$, leading digits are removed and the remaining leading digit is trimed to the exact bit count.
 
-EXAM,bn_mp_mod_2d.c
+EXAM,mp_mod_2d.c
 
 We first avoid cases of $b \le 0$ by simply mp\_zero()'ing the destination in such cases.  Next if $2^b$ is larger
 than the input we just mp\_copy() the input and return right away.  After this point we know we must actually
@@ -2411,7 +2411,7 @@ At step 5.5 the nested loop is finished and any carry that was left over should 
 digit since that digit is assumed to be zero at this point.  However, if $ix + pb \ge digs$ the carry is not set as it would make the result
 exceed the precision requested.
 
-EXAM,bn_s_mp_mul_digs.c
+EXAM,s_mp_mul_digs.c
 
 First we determine (line @30,if@) if the Comba method can be used first since it's faster.  The conditions for
 sing the Comba routine are that min$(a.used, b.used) < \delta$ and the number of digits of output is less than
@@ -2605,7 +2605,7 @@ $O \left ((p + q)n^2 \right )$ time to multiply two $n$-digit numbers.  The Comb
 the speed increase is actually much more.  With $O(n)$ space the algorithm can be reduced to $O(pn + qn)$ time by implementing the $n$ multiply
 and addition operations in the nested loop in parallel.
 
-EXAM,bn_s_mp_mul_digs_fast.c
+EXAM,s_mp_mul_digs_fast.c
 
 As per the pseudo--code we first calculate $pa$ (line @47,MIN@) as the number of digits to output.  Next we begin the outer loop
 to produce the individual columns of the product.  We use the two aliases $tmpx$ and $tmpy$ (lines @61,tmpx@, @62,tmpy@) to point
@@ -2803,7 +2803,7 @@ of an additional temporary variable, the algorithm can avoid an addition memory 
 
 The remaining steps 13 through 18 compute the Karatsuba polynomial through a variety of digit shifting and addition operations.
 
-EXAM,bn_s_mp_karatsuba_mul.c
+EXAM,s_mp_karatsuba_mul.c
 
 The new coding element in this routine, not  seen in previous routines, is the usage of goto statements.  The conventional
 wisdom is that goto statements should be avoided.  This is generally true, however when every single function call can fail, it makes sense
@@ -2937,7 +2937,7 @@ that row $1$ must be subtracted from row $4$ and simultaneously row $0$ subtract
 Once the coeffients have been isolated, the polynomial $W(x) = \sum_{i=0}^{2n} w_i x^i$ is known.  By substituting $\beta^{k}$ for $x$, the integer
 result $a \cdot b$ is produced.
 
-EXAM,bn_s_mp_toom_mul.c
+EXAM,s_mp_toom_mul.c
 
 The first obvious thing to note is that this algorithm is complicated.  The complexity is worth it if you are multiplying very
 large numbers.  For example, a 10,000 digit multiplication takes approximaly 99,282,205 fewer single precision multiplications with
@@ -2994,7 +2994,7 @@ This algorithm performs the signed multiplication of two inputs.  It will make u
 available when the input is of appropriate size.  The \textbf{sign} of the result is not set until the end of the algorithm since algorithm
 s\_mp\_mul\_digs will clear it.
 
-EXAM,bn_mp_mul.c
+EXAM,mp_mul.c
 
 The implementation is rather simplistic and is not particularly noteworthy.  Line @22,?@ computes the sign of the result using the ``?''
 operator from the C programming language.  Line @37,<<@ computes $\delta$ using the fact that $1 << k$ is equal to $2^k$.
@@ -3095,7 +3095,7 @@ when it is multiplied by two, it can be properly represented by a mp\_word.
 Similar to algorithm s\_mp\_mul\_digs, after every pass of the inner loop, the destination is correctly set to the sum of all of the partial
 results calculated so far.  This involves expensive carry propagation which will be eliminated in the next algorithm.
 
-EXAM,bn_s_mp_sqr.c
+EXAM,s_mp_sqr.c
 
 Inside the outer loop (line @32,for@) the square term is calculated on line @35,r =@.  The carry (line @42,>>@) has been
 extracted from the mp\_word accumulator using a right shift.  Aliases for $a_{ix}$ and $t_{ix+iy}$ are initialized
@@ -3178,7 +3178,7 @@ fewer multiplications and the routine ends up being faster.
 Finally the last difference is the addition of the ``square'' term outside the inner loop (step 5.8).  We add in the square
 only to even outputs and it is the square of the term at the $\lfloor ix / 2 \rfloor$ position.
 
-EXAM,bn_s_mp_sqr_fast.c
+EXAM,s_mp_sqr_fast.c
 
 This implementation is essentially a copy of Comba multiplication with the appropriate changes added to make it faster for
 the special case of squaring.
@@ -3282,7 +3282,7 @@ where multiplication is substantially slower\footnote{On the Athlon there is a 1
 the Intel P4 processor this ratio is 1:29 making this method even more beneficial.  The only common exception is the ARMv4 processor which has a
 ratio of 1:7.  } than simpler operations such as addition.
 
-EXAM,bn_s_mp_karatsuba_sqr.c
+EXAM,s_mp_karatsuba_sqr.c
 
 This implementation is largely based on the implementation of algorithm mp\_karatsuba\_mul.  It uses the same inline style to copy and
 shift the input into the two halves.  The loop from line @54,{@ to line @70,}@ has been modified since only one input exists.  The \textbf{used}
@@ -3335,7 +3335,7 @@ This algorithm computes the square of the input using one of four different algo
 \textbf{TOOM\_SQR\_CUTOFF} or \textbf{KARATSUBA\_SQR\_CUTOFF} digits then either the Toom-Cook or the Karatsuba Squaring algorithm is used.  If
 neither of the polynomial basis algorithms should be used then either the Comba or baseline algorithm is used.
 
-EXAM,bn_mp_sqr.c
+EXAM,mp_sqr.c
 
 \section*{Exercises}
 \begin{tabular}{cl}
@@ -3584,7 +3584,7 @@ fixed up in case it is negative.  The invariant $\beta^{m+1}$ must be added to t
 The while loop at step 9 will subtract $b$ until the residue is less than $b$.  If the algorithm is performed correctly this step is
 performed at most twice, and on average once. However, if $a \ge b^2$ than it will iterate substantially more times than it should.
 
-EXAM,bn_mp_reduce.c
+EXAM,mp_reduce.c
 
 The first multiplication that determines the quotient can be performed by only producing the digits from $m - 1$ and up.  This essentially halves
 the number of single precision multiplications required.  However, the optimization is only safe if $\beta$ is much larger than the number of digits
@@ -3617,7 +3617,7 @@ future use so that the Barrett algorithm can be used without delay.
 This algorithm computes the reciprocal $\mu$ required for Barrett reduction.  First $\beta^{2m}$ is calculated as $2^{2 \cdot lg(\beta) \cdot  m}$ which
 is equivalent and much faster.  The final value is computed by taking the integer quotient of $\lfloor \mu / b \rfloor$.
 
-EXAM,bn_mp_reduce_setup.c
+EXAM,mp_reduce_setup.c
 
 This simple routine calculates the reciprocal $\mu$ required by Barrett reduction.  Note the extended usage of algorithm mp\_div where the variable
 which would received the remainder is passed as NULL.  As will be discussed in~\ref{sec:division} the division routine allows both the quotient and the
@@ -3871,7 +3871,7 @@ Using a quick inspection this algorithm requires $n$ single precision multiplica
 in the inner loop.  In total $n^2 + n$ single precision multiplications which compares favourably to Barrett at $n^2 + 2n - 1$ single precision
 multiplications.
 
-EXAM,bn_mp_montgomery_reduce.c
+EXAM,mp_montgomery_reduce.c
 
 This is the baseline implementation of the Montgomery reduction algorithm.  Lines @30,digs@ to @35,}@ determine if the Comba based
 routine can be used instead.  Line @47,mu@ computes the value of $\mu$ for that particular iteration of the outer loop.
@@ -3959,7 +3959,7 @@ point.
 Step 5 will propagate the remainder of the carries upwards.  On step 6 the columns are reduced modulo $\beta$ and shifted simultaneously as they are
 stored in the destination $x$.
 
-EXAM,bn_s_mp_montgomery_reduce_fast.c
+EXAM,s_mp_montgomery_reduce_fast.c
 
 The $\hat W$ array is first filled with digits of $x$ on line @49,for@ then the rest of the digits are zeroed on line @54,for@.  Both loops share
 the same alias variables to make the code easier to read.
@@ -4001,7 +4001,7 @@ To calculate the variable $\rho$ a relatively simple algorithm will be required.
 This algorithm will calculate the value of $\rho$ required within the Montgomery reduction algorithms.  It uses a very interesting trick
 to calculate $1/n_0$ when $\beta$ is a power of two.
 
-EXAM,bn_mp_montgomery_setup.c
+EXAM,mp_montgomery_setup.c
 
 This source code computes the value of $\rho$ required to perform Montgomery reduction.  It has been modified to avoid performing excess
 multiplications when $\beta$ is not the default 28-bits.
@@ -4188,7 +4188,7 @@ $x$ before the addition of the multiple of the upper half.
 At step 8 if $x$ is still larger than $n$ another pass of the algorithm is required.  First $n$ is subtracted from $x$ and then the algorithm resumes
 at step 3.
 
-EXAM,bn_mp_dr_reduce.c
+EXAM,mp_dr_reduce.c
 
 The first step is to grow $x$ as required to $2m$ digits since the reduction is performed in place on $x$.  The label on line @49,top:@ is where
 the algorithm will resume if further reduction passes are required.  In theory it could be placed at the top of the function however, the size of
@@ -4226,7 +4226,7 @@ completeness.
 \caption{Algorithm mp\_dr\_setup}
 \end{figure}
 
-EXAM,bn_mp_dr_setup.c
+EXAM,mp_dr_setup.c
 
 \subsubsection{Modulus Detection}
 Another algorithm which will be useful is the ability to detect a restricted Diminished Radix modulus.  An integer is said to be
@@ -4256,7 +4256,7 @@ This algorithm determines if a value is in Diminished Radix form.  Step 1 reject
 in the mp\_int.  Step 2 tests all but the first digit to see if they are equal to $\beta - 1$.  If the algorithm manages to get to
 step 3 then $n$ must be of Diminished Radix form.
 
-EXAM,bn_mp_dr_is_modulus.c
+EXAM,mp_dr_is_modulus.c
 
 \subsection{Unrestricted Diminished Radix Reduction}
 The unrestricted Diminished Radix algorithm allows modular reductions to be performed when the modulus is of the form $2^p - k$.  This algorithm
@@ -4294,7 +4294,7 @@ algorithm is much faster than either Montgomery or Barrett reduction when the mo
 This algorithm quickly reduces an input $a$ modulo an unrestricted Diminished Radix modulus $n$.  Division by $2^p$ is emulated with a right
 shift which makes the algorithm fairly inexpensive to use.
 
-EXAM,bn_mp_reduce_2k.c
+EXAM,mp_reduce_2k.c
 
 The algorithm mp\_count\_bits calculates the number of bits in an mp\_int which is used to find the initial value of $p$.  The call to mp\_div\_2d
 on line @31,mp_div_2d@ calculates both the quotient $q$ and the remainder $a$ required.  By doing both in a single function call the code size
@@ -4331,7 +4331,7 @@ To setup this reduction algorithm the value of $k = 2^p - n$ is required.
 This algorithm computes the value of $k$ required for the algorithm mp\_reduce\_2k.  By making a temporary variable $x$ equal to $2^p$ a subtraction
 is sufficient to solve for $k$.  Alternatively if $n$ has more than one digit the value of $k$ is simply $\beta - n_0$.
 
-EXAM,bn_mp_reduce_2k_setup.c
+EXAM,mp_reduce_2k_setup.c
 
 \subsubsection{Unrestricted Detection}
 An integer $n$ is a valid unrestricted Diminished Radix modulus if either of the following are true.
@@ -4370,7 +4370,7 @@ significant bit.  The resulting sum will be a power of two.
 \textbf{Algorithm mp\_reduce\_is\_2k.}
 This algorithm quickly determines if a modulus is of the form required for algorithm mp\_reduce\_2k to function properly.
 
-EXAM,bn_mp_reduce_is_2k.c
+EXAM,mp_reduce_is_2k.c
 
 
 
@@ -4537,7 +4537,7 @@ on step 3.1.  In the following step if the most significant bit of $b$ is one th
 of $b$ is shifted left one bit to make the next bit down from the most signficant bit the new most significant bit.  In effect each
 iteration of the loop moves the bits of the exponent $b$ upwards to the most significant location.
 
-EXAM,bn_mp_expt_d_ex.c
+EXAM,mp_expt_d_ex.c
 
 This describes only the algorithm that is used when the parameter $fast$ is $0$.  Line @31,mp_set@ sets the initial value of the result to $1$.  Next the loop on line @54,for@ steps through each bit of the exponent starting from
 the most significant down towards the least significant. The invariant squaring operation placed on line @333,mp_sqr@ is performed first.  After
@@ -4719,7 +4719,7 @@ which uses Barrett reduction to reduce the product modulo $p$.  The second algor
 except it uses either Montgomery or Diminished Radix reduction.  The two latter reduction algorithms are clumped in the same exponentiation
 algorithm since their arguments are essentially the same (\textit{two mp\_ints and one mp\_digit}).
 
-EXAM,bn_mp_exptmod.c
+EXAM,mp_exptmod.c
 
 In order to keep the algorithms in a known state the first step on line @29,if@ is to reject any negative modulus as input.  If the exponent is
 negative the algorithm tries to perform a modular exponentiation with the modular inverse of the base $G$.  The temporary variable $tmpG$ is assigned
@@ -4887,7 +4887,7 @@ FIGU,expt_state,Sliding Window State Diagram
 By step 13 there are no more digits left in the exponent.  However, there may be partial bits in the window left.  If $mode = 2$ then
 a Left-to-Right algorithm is used to process the remaining few bits.
 
-EXAM,bn_s_mp_exptmod.c
+EXAM,s_mp_exptmod.c
 
 Lines @31,if@ through @45,}@ determine the optimal window size based on the length of the exponent in bits.  The window divisions are sorted
 from smallest to greatest so that in each \textbf{if} statement only one condition must be tested.  For example, by the \textbf{if} statement
@@ -4927,7 +4927,7 @@ equivalent to $m \cdot 2^k$.  By this logic when $m = 1$ a quick power of two ca
 
 \textbf{Algorithm mp\_2expt.}
 
-EXAM,bn_mp_2expt.c
+EXAM,mp_2expt.c
 
 \chapter{Higher Level Algorithms}
 
@@ -5170,7 +5170,7 @@ is that when the estimations are being made (\textit{inside the loop on step 13.
 outside their respective boundaries.  For example, if $t = 0$ or $i \le 1$ then the digits would be undefined.  In those cases the digits should
 respectively be replaced with a zero.
 
-EXAM,bn_mp_div.c
+EXAM,mp_div.c
 
 The implementation of this algorithm differs slightly from the pseudo code presented previously.  In this algorithm either of the quotient $c$ or
 remainder $d$ may be passed as a \textbf{NULL} pointer which indicates their value is not desired.  For example, the C code to call the division
@@ -5230,7 +5230,7 @@ algorithms.   As a result these algorithms are subtantially simpler with a sligh
 \textbf{Algorithm mp\_add\_d.}
 This algorithm initiates a temporary mp\_int with the value of the single digit and uses algorithm mp\_add to add the two values together.
 
-EXAM,bn_mp_add_d.c
+EXAM,mp_add_d.c
 
 Clever use of the letter 't'.
 
@@ -5275,7 +5275,7 @@ only has one digit.
 This algorithm quickly multiplies an mp\_int by a small single digit value.  It is specially tailored to the job and has a minimal of overhead.
 Unlike the full multiplication algorithms this algorithm does not require any significnat temporary storage or memory allocations.
 
-EXAM,bn_mp_mul_d.c
+EXAM,mp_mul_d.c
 
 In this implementation the destination $c$ may point to the same mp\_int as the source $a$ since the result is written after the digit is
 read from the source.  This function uses pointer aliases $tmpa$ and $tmpc$ for the digits of $a$ and $c$ respectively.
@@ -5325,7 +5325,7 @@ If the divisor $b$ is equal to three a variant of this algorithm is used which i
 a multiplication by $\lfloor \beta / 3 \rfloor$ and the appropriate shift and residual fixup.  In essence it is much like the Barrett reduction
 from chapter seven.
 
-EXAM,bn_mp_div_d.c
+EXAM,mp_div_d.c
 
 Like the implementation of algorithm mp\_div this algorithm allows either of the quotient or remainder to be passed as a \textbf{NULL} pointer to
 indicate the respective value is not required.  This allows a trivial single digit modular reduction algorithm, mp\_mod\_d to be created.
@@ -5394,7 +5394,7 @@ multiplications by t$1$ inside the loop.
 The initial value of the approximation is t$2 = 2$ which allows the algorithm to start with very small values and quickly converge on the
 root.  Ideally this algorithm is meant to find the $n$'th root of an input where $n$ is bounded by $2 \le n \le 5$.
 
-EXAM,bn_mp_n_root.c
+EXAM,mp_n_root.c
 
 \section{Random Number Generation}
 
@@ -5430,7 +5430,7 @@ This algorithm produces a pseudo-random integer of $b$ digits.  By ensuring that
 final result has at least $b$ digits.  It relies heavily on a third-part random number generator which should ideally generate uniformly all of
 the integers from $0$ to $\beta - 1$.
 
-EXAM,bn_mp_rand.c
+EXAM,mp_rand.c
 
 \section{Formatted Representations}
 The ability to emit a radix-$n$ textual representation of an integer is useful for interacting with human parties.  For example, the ability to
@@ -5507,7 +5507,7 @@ string  to indicate the value is negative, otherwise it is assumed to be positiv
 and will stop when it reads a character it cannot map the algorithm stops reading characters from the string.  This allows numbers to be embedded
 as part of larger input without any significant problem.
 
-EXAM,bn_mp_read_radix.c
+EXAM,mp_read_radix.c
 
 \subsection{Generating Radix-$n$ Output}
 Generating radix-$n$ output is fairly trivial with a division and remainder algorithm.
@@ -5566,7 +5566,7 @@ are required instead of a series of $n \times k$ divisions.  One design flaw of 
 \label{fig:mpradix}
 \end{figure}
 
-EXAM,bn_mp_toradix.c
+EXAM,mp_toradix.c
 
 \chapter{Number Theoretic Algorithms}
 This chapter discusses several fundamental number theoretic algorithms such as the greatest common divisor, least common multiple and Jacobi
@@ -5745,7 +5745,7 @@ factors of two from the difference $u$ to ensure that in the next iteration of t
 After $v = 0$ occurs the variable $u$ has the greatest common divisor of the pair $\left < u, v \right >$ just after step six.  The result
 must be adjusted by multiplying by the common factors of two ($2^k$) removed earlier.
 
-EXAM,bn_mp_gcd.c
+EXAM,mp_gcd.c
 
 This function makes use of the macros mp\_iszero and mp\_iseven.  The former evaluates to $1$ if the input mp\_int is equivalent to the
 integer zero otherwise it evaluates to $0$.  The latter evaluates to $1$ if the input mp\_int represents a non-zero even integer otherwise
@@ -5795,7 +5795,7 @@ Similarly in number theory if a composite $n$ has two prime factors $p$ and $q$ 
 This algorithm computes the least common multiple of two mp\_int inputs $a$ and $b$.  It computes the least common multiple directly by
 dividing the product of the two inputs by their greatest common divisor.
 
-EXAM,bn_mp_lcm.c
+EXAM,mp_lcm.c
 
 \section{Jacobi Symbol Computation}
 To explain the Jacobi Symbol we shall first discuss the Legendre function\footnote{Arrg.  What is the name of this?} off which the Jacobi symbol is
@@ -6067,7 +6067,7 @@ is the modular inverse of $a$.  The actual value of $C$ is congruent to, but not
 within $1 \le a^{-1} < b$.  Step numbers twelve and thirteen adjust the inverse until it is in range.  If the original input $a$ is within $0 < a < p$
 then only a couple of additions or subtractions will be required to adjust the inverse.
 
-EXAM,bn_mp_invmod.c
+EXAM,mp_invmod.c
 
 \subsubsection{Odd Moduli}
 
@@ -6134,12 +6134,12 @@ array \_\_prime\_tab is an array of the first \textbf{PRIME\_SIZE} prime numbers
 \textbf{Algorithm mp\_prime\_is\_divisible.}
 This algorithm attempts to determine if a candidate integer $n$ is composite by performing trial divisions.
 
-EXAM,bn_mp_prime_is_divisible.c
+EXAM,mp_prime_is_divisible.c
 
 The algorithm defaults to a return of $0$ in case an error occurs.  The values in the prime table are all specified to be in the range of a
 mp\_digit.  The table \_\_prime\_tab is defined in the following file.
 
-EXAM,bn_prime_tab.c
+EXAM,mp_prime_tab.c
 
 Note that there are two possible tables.  When an mp\_digit is 7-bits long only the primes upto $127$ may be included, otherwise the primes
 upto $1619$ are used.  Note that the value of \textbf{PRIME\_SIZE} is a constant dependent on the size of a mp\_digit.
@@ -6180,7 +6180,7 @@ in size.
 This algorithm determines whether an mp\_int $a$ is a Fermat prime to the base $b$ or not.  It uses a single modular exponentiation to
 determine the result.
 
-EXAM,bn_mp_prime_fermat.c
+EXAM,mp_prime_fermat.c
 
 \subsection{The Miller-Rabin Test}
 The Miller-Rabin (citation) test is another primality test which has tighter error bounds than the Fermat test specifically with sequentially chosen
@@ -6227,7 +6227,7 @@ square $y$ upto $s - 1$ times stopping only when $y \equiv -1$.  If $y^2 \equiv 
 is provably composite.  If the algorithm performs $s - 1$ squarings and $y \nequiv -1$ then $a$ is provably composite.  If $a$ is not provably
 composite then it is \textit{probably} prime.
 
-EXAM,bn_mp_prime_miller_rabin.c
+EXAM,mp_prime_miller_rabin.c
 
 
 

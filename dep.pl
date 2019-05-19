@@ -24,7 +24,7 @@ print {$class} << 'EOS';
 #if defined(LTM_ALL)
 EOS
 
-foreach my $filename (glob 'bn*.c') {
+foreach my $filename (glob '*mp_*.c') {
    my $define = $filename;
 
    print "Processing $filename\n";
@@ -77,7 +77,7 @@ EOS
 
 # now do classes
 
-foreach my $filename (glob 'bn*.c') {
+foreach my $filename (glob '*mp_*.c') {
    open(my $src, '<', $filename) or die "Can't open source file!\n";
    read $src, my $content, -s $src;
    close $src;
@@ -100,7 +100,7 @@ EOS
           my $a = $&;
           next if $a eq "mp_err";
           $a =~ tr/[a-z]/[A-Z]/;
-          $a = 'BN_' . $a . '_C';
+          $a = $a . '_C';
           if (!($list =~ /$a/)) {
              print {$class} << "EOS";
 #   define $a
@@ -146,7 +146,7 @@ sub draw_func
 {
    my @funcs = split ',', $_[0];
    # try this if you want to have a look at a minimized version of the callgraph without all the trivial functions
-   #if ($list =~ /$funcs[0]/ || $funcs[0] =~ /BN_MP_(ADD|SUB|CLEAR|CLEAR_\S+|DIV|MUL|COPY|ZERO|GROW|CLAMP|INIT|INIT_\S+|SET|ABS|CMP|CMP_D|EXCH)_C/) {
+   #if ($list =~ /$funcs[0]/ || $funcs[0] =~ /MP_(ADD|SUB|CLEAR|CLEAR_\S+|DIV|MUL|COPY|ZERO|GROW|CLAMP|INIT|INIT_\S+|SET|ABS|CMP|CMP_D|EXCH)_C/) {
    if ($list =~ /$funcs[0]/) {
       return;
    } else {

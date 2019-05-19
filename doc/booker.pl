@@ -87,7 +87,6 @@ while (<$in>) {
       my $tmp = $m[1];
       my $fun = $tmp;
       $tmp =~ s/_/"\\_"/ge;
-      $fun =~ s/^bn_//;
       $fun =~ s/\.c$//;
       $fun =~ s/_/"\\_"/ge;
       print {$out} "\\index{$fun}\\vspace{+3mm}\\begin{small}\n\\hspace{-5.1mm}{\\bf File}: $tmp\n\\vspace{-3mm}\n\\begin{alltt}\n";
@@ -96,7 +95,7 @@ while (<$in>) {
       if ($skipheader == 1) {
          # scan till next end of comment, e.g. skip license
          while (<$src>) {
-            if ($_ =~ /#ifdef BN/) {
+            if ($_ =~ /#ifdef (MP_|S_MP_)/) {
                printf {$out} ("%03d   ", $line);
                for ($x = 0; $x < length($_); $x++) {
                    print {$out} chr(vec($_, $x, 8));
