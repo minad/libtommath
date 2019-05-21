@@ -224,11 +224,13 @@ do
       VALGRIND_OPTS="$VALGRIND_OPTS ${1#*=}"
     ;;
     --with-valgrind*)
-      if [[ ${1#*d} != "" ]]
-      then
-        VALGRIND_BIN="${1#*=}"
-      else
-        VALGRIND_BIN="valgrind"
+      if [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == *"valgrind"* || "$TRAVIS_COMMIT_MESSAGE" == *"valgrind"* ]]; then
+        if [[ ${1#*d} != "" ]]
+        then
+          VALGRIND_BIN="${1#*=}"
+        else
+          VALGRIND_BIN="valgrind"
+        fi
       fi
       start_alive_printing
     ;;
